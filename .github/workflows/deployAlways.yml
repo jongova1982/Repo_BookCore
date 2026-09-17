@@ -3,7 +3,7 @@ name: 🚀 Tarea de Despliegue
 on:
    push:
      branches:
-       - main
+       - MGM_BOOKCORE
 
 jobs:
   deploy:
@@ -17,9 +17,9 @@ jobs:
       - name: 📂 Sincronizando archivos via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ftp-repoclase.alwaysdata.net # Change if using another host
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ftp-misaelgaray.alwaysdata.net # Change if using another host
+          username: 'misaelgaray'
+          password: 'Mgm1927.'
           server-dir: www/ # Replace with your correct path
           protocol: ftps
           timeout: 86400000

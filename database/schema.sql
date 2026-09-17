@@ -1,0 +1,3 @@
+-- El aplicativo crea automáticamente estas tablas al iniciar.
+-- Este archivo sirve como respaldo/documentación del esquema MySQL.
+-- Compatible con MySQL 5.7+/8.x.
