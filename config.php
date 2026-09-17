@@ -10,6 +10,7 @@ define('DB_HOST', 'mysql-vinasco.alwaysdata.net');   // Ejemplo: mysql-tuusuario
 define('DB_NAME', 'vinasco_bookcore');        // Nombre de tu base de datos
 define('DB_USER', 'vinasco');                   // Usuario de MySQL
 define('DB_PASS', 'clase1234');               // Contraseña de MySQL
+define('DB_PORT', '3306');
 
 // Conexión con PDO
 try {
