@@ -60,6 +60,9 @@
 		.primary { border: 0; background: var(--green); color: #fff; padding: 11px 16px; border-radius: 7px; font-weight: 700; font-size: 12px; } .primary:hover { background: var(--green-dark); }
 		.form-panel { padding: 22px; margin-bottom: 20px; display: none; } .form-panel.open { display: block; } .form-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; } label { display:grid; gap: 6px; color: var(--muted); font-size: 11px; font-weight: 700; } input, select { width:100%; border: 1px solid var(--line); border-radius: 6px; padding: 10px; color: var(--ink); background: #fbfcfb; outline: none; } input:focus, select:focus { border-color: var(--green); } .form-actions { display:flex; justify-content:flex-end; gap: 8px; margin-top: 17px; } .secondary { border:1px solid var(--line); color:var(--muted); background:#fff; padding: 10px 14px; border-radius: 7px; font-weight: 700; font-size: 12px; }
 		.empty { color: var(--muted); text-align: center; padding: 30px; font-size: 13px; }
+		.row-actions { display: flex; gap: 6px; white-space: nowrap; }
+		.row-actions button { border: 0; border-radius: 5px; padding: 7px 9px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+		.edit-button { color: #47718e; background: #e8f0f6; } .delete-button { color: #a84e47; background: #fae9e5; }
 		@media (max-width: 850px) { .app { grid-template-columns: 1fr; } .sidebar { padding: 16px 20px; flex-direction: row; align-items: center; gap: 18px; } .eyebrow, .sidebar-footer { display:none; } .nav { display:flex; margin-left:auto; } .nav button { padding: 9px; } .nav button span:last-child { display:none; } .main { padding: 24px 20px 40px; } .topbar { margin-bottom: 30px; } .metrics { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
 		@media (max-width: 560px) { .hero, .section-header { align-items:start; flex-direction:column; } .metrics { gap: 10px; } .metric { padding: 15px; } .metric-value { font-size: 25px; } .panel { overflow-x:auto; } table { min-width: 540px; } .form-grid { grid-template-columns: 1fr 1fr; } .profile span { display:none; } }
 	</style>
@@ -108,6 +111,75 @@
 			if (type === 'book') document.getElementById('book-count').textContent = Number(document.getElementById('book-count').textContent.replace(',', '')) + 1;
 			if (type === 'loan') document.getElementById('loan-count').textContent = Number(document.getElementById('loan-count').textContent) + 1;
 		}));
+		const crudConfig = {
+			user: { form: 'user-form', list: 'users-list', fields: ['name', 'id', 'phone'], count: 'user-count' },
+			book: { form: 'book-form', list: 'books-list', fields: ['code', 'title', 'author', 'units'], count: 'book-count' },
+			loan: { form: 'loan-form', list: 'loans-list', fields: ['book', 'user', 'due'], count: 'loan-count' }
+		};
+		let editingRow = null;
+		function addRowActions(type) {
+			const config = crudConfig[type];
+			const table = document.getElementById(config.list).closest('table');
+			if (!table.querySelector('th:last-child').textContent.includes('ACCIONES')) table.querySelector('thead tr').insertAdjacentHTML('beforeend', '<th>Acciones</th>');
+			document.querySelectorAll(`#${config.list} tr`).forEach(row => {
+				if (row.querySelector('[data-edit]')) return;
+				row.dataset.type = type;
+				row.dataset.values = JSON.stringify(config.fields.map((field, index) => field === 'due' && type === 'loan' ? ({ 'The Alchemist': '2026-09-24', 'Atomic Habits': '2026-09-19' }[row.children[0].textContent.trim()] || '') : row.children[index].textContent.trim()));
+				row.insertAdjacentHTML('beforeend', `<td class="row-actions"><button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`);
+			});
+		}
+		Object.keys(crudConfig).forEach(addRowActions);
+		document.addEventListener('click', event => {
+			const editButton = event.target.closest('[data-edit]');
+			const deleteButton = event.target.closest('[data-delete]');
+			if (deleteButton) {
+				const row = deleteButton.closest('tr');
+				if (!confirm('¿Eliminar este registro?')) return;
+				const config = crudConfig[row.dataset.type];
+				row.remove();
+				const counter = document.getElementById(config.count);
+				counter.textContent = Math.max(0, Number(counter.textContent.replace(',', '')) - 1).toLocaleString('es-CO');
+			}
+			if (editButton) {
+				const row = editButton.closest('tr');
+				const config = crudConfig[editButton.dataset.edit];
+				const form = document.querySelector(`#${config.form} form`);
+				const values = JSON.parse(row.dataset.values);
+				config.fields.forEach((field, index) => { if (form.elements[field]) form.elements[field].value = values[index] || ''; });
+				editingRow = row;
+				document.querySelector(`#${config.form} h2`).textContent = 'Editar registro';
+				form.querySelector('.primary').textContent = 'Actualizar';
+				document.getElementById(config.form).classList.add('open');
+			}
+		});
+		document.addEventListener('submit', event => {
+			if (!event.target.matches('form[data-type]')) return;
+			event.preventDefault();
+			event.stopPropagation();
+			const form = event.target;
+			const type = form.dataset.type;
+			const config = crudConfig[type];
+			const data = Object.fromEntries(new FormData(form));
+			const values = type === 'user' ? [data.name, data.id, data.phone] : type === 'book' ? [data.code, data.title, data.author, data.units] : [data.book, data.user, data.due];
+			const displayValues = type === 'loan' ? [data.book, data.user, new Date(data.due + 'T00:00:00').toLocaleDateString('es-CO', { month: 'short', day: 'numeric', year: 'numeric' })] : values;
+			if (editingRow) {
+				values.forEach((value, index) => { editingRow.children[index].textContent = displayValues[index]; });
+				editingRow.dataset.values = JSON.stringify(values);
+			} else {
+				const row = document.createElement('tr');
+				row.dataset.type = type;
+				row.dataset.values = JSON.stringify(values);
+				row.innerHTML = displayValues.map((value, index) => `<td class="${index === (type === 'user' ? 0 : type === 'book' ? 1 : 0) ? 'book-name' : ''}">${value}</td>`).join('') + (type === 'user' ? '<td><span class="status available">Activo</span></td>' : type === 'loan' ? '<td><span class="status available">A tiempo</span></td>' : '') + `<td class="row-actions"><button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`;
+				document.getElementById(config.list).prepend(row);
+				const counter = document.getElementById(config.count);
+				counter.textContent = (Number(counter.textContent.replace(',', '')) + 1).toLocaleString('es-CO');
+			}
+			editingRow = null;
+			form.reset();
+			form.closest('.form-panel').classList.remove('open');
+			form.closest('.form-panel').querySelector('h2').textContent = type === 'loan' ? 'Crear préstamo' : type === 'book' ? 'Registrar libro' : 'Registrar usuario';
+			form.querySelector('.primary').textContent = type === 'loan' ? 'Crear préstamo' : type === 'book' ? 'Guardar libro' : 'Guardar usuario';
+		}, true);
 	</script>
 </body>
 </html>
