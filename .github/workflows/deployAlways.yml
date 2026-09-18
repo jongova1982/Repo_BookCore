@@ -3,7 +3,7 @@ name: 🚀 Tarea de Despliegue
 on:
    push:
      branches:
-       - RepoBookCoreJacke
+       - Repo_BookCoreJacke
 
 jobs:
   deploy:
