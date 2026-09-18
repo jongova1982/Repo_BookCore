@@ -58,7 +58,7 @@ button,input,select,textarea{font:inherit}
 .topbar h1{margin:4px 0 0;font-size:30px;line-height:1.15;letter-spacing:-.02em;color:#132a42}
 .online{font-size:12px;color:#1f8b59;font-weight:800;background:#eaf8f1;border-radius:999px;padding:8px 12px}
 
-.hero{position:relative;min-height:315px;border-radius:22px;overflow:hidden;margin-bottom:20px;background-image:linear-gradient(90deg,rgba(12,24,38,.88) 0%,rgba(31,30,28,.68) 48%,rgba(32,25,20,.28) 100%),url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1800&q=85');background-size:cover;background-position:center;box-shadow:var(--shadow-lg);display:flex;align-items:center}
+.hero{background-color:#1a2d40;position:relative;min-height:315px;border-radius:22px;overflow:hidden;margin-bottom:20px;background-image:linear-gradient(90deg,rgba(12,24,38,.88) 0%,rgba(31,30,28,.68) 48%,rgba(32,25,20,.28) 100%),url('fondo-biblioteca.jpg');background-size:cover;background-position:center;box-shadow:var(--shadow-lg);display:flex;align-items:center}
 .hero::after{content:"";position:absolute;inset:auto 0 0 0;height:28%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.22))}
 .hero-content{position:relative;z-index:1;padding:36px 42px;max-width:690px;color:#fff}
 .hero-kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
@@ -84,12 +84,12 @@ button,input,select,textarea{font:inherit}
 .quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
 .feature-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);transition:.18s ease}
 .feature-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(16,42,67,.14)}
-.feature-image{height:142px;background-size:cover;background-position:center;position:relative}
+.feature-image{height:142px;background-color:#1f3a52;background-size:cover;background-position:center;position:relative}
 .feature-image::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,25,40,.03),rgba(10,25,40,.35))}
-.feature-users{background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80')}
-.feature-books{background-image:url('https://images.unsplash.com/photo-1495446815900-a7297e633e8d?auto=format&fit=crop&w=900&q=80')}
-.feature-loans{background-image:url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=900&q=80')}
-.feature-reports{background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80')}
+.feature-users{background-image:url('usuarios.jpg')}
+.feature-books{background-image:url('libros.jpg')}
+.feature-loans{background-image:url('prestamos.jpg')}
+.feature-reports{background-image:url('reportes.jpg')}
 .feature-body{padding:17px}
 .feature-head{display:flex;align-items:center;gap:11px;margin-bottom:9px}
 .feature-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:#eef5fc;color:#1768b5}
@@ -134,13 +134,13 @@ table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}th,td{p
 .empty{padding:30px!important;text-align:center;color:var(--muted)}.muted{color:var(--muted)}
 .loan-form{background:linear-gradient(180deg,#f8fbff,#f5f9fd);border:1px solid #dfe8f2;padding:16px;border-radius:15px}.items{margin-top:5px}.loan-item select{min-width:0}.loan-item input{max-width:130px}
 
-.quote-band{margin:4px 0 20px;border-radius:18px;overflow:hidden;min-height:125px;display:flex;align-items:center;padding:26px 34px;color:#fff;background-image:linear-gradient(90deg,rgba(19,42,65,.86),rgba(19,42,65,.36)),url('https://images.unsplash.com/photo-1526243741027-444d633d7365?auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;box-shadow:var(--shadow)}
+.quote-band{background-color:#1e354b;margin:4px 0 20px;border-radius:18px;overflow:hidden;min-height:125px;display:flex;align-items:center;padding:26px 34px;color:#fff;background-image:linear-gradient(90deg,rgba(19,42,65,.86),rgba(19,42,65,.36)),url('fondo-cita.jpg');background-size:cover;background-position:center;box-shadow:var(--shadow)}
 .quote-band blockquote{margin:0;font-family:Georgia,serif;font-style:italic;font-size:23px;max-width:790px}.quote-band cite{display:block;margin-top:8px;font-family:Inter,sans-serif;font-style:normal;font-size:12px;color:#e5eef8}
 .footer-line{display:flex;justify-content:space-between;align-items:center;padding:10px 2px 0;color:#718095;font-size:12px}
 
 .login-page{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#eef4fb 0%,#f8f9fb 100%)}
 .login-shell{width:min(970px,100%);display:grid;grid-template-columns:1.05fr .95fr;background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg)}
-.login-visual{min-height:610px;padding:44px;background-image:linear-gradient(180deg,rgba(11,32,52,.68),rgba(11,32,52,.88)),url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1100&q=85');background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between}
+.login-visual{background-color:#152d43;min-height:610px;padding:44px;background-image:linear-gradient(180deg,rgba(11,32,52,.68),rgba(11,32,52,.88)),url('fondo-login.jpg');background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between}
 .login-visual h2{font-family:Georgia,serif;font-size:41px;line-height:1.05;margin:30px 0 12px}.login-visual p{color:#e0eaf3;max-width:420px;line-height:1.6;font-size:15px}.login-badge{display:inline-flex;width:max-content;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.login-quote{font-family:Georgia,serif;font-style:italic;color:#f4d99b;font-size:15px;max-width:420px}
 .login-panel{padding:46px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}.login-panel::after{content:"";position:absolute;right:-36px;bottom:-46px;width:260px;height:260px;background:url("bookcore_logo.png") center/contain no-repeat;opacity:.035;pointer-events:none}
 .login-card{width:100%;position:relative;z-index:1}.login-card h1{margin:10px 0 5px;font-family:Georgia,serif;font-size:32px}.login-card form{display:grid;gap:15px;margin-top:20px}.login-note{font-size:12px;color:var(--muted);background:#f7f9fc;border-radius:10px;padding:10px;margin-top:14px;text-align:center}.centered{padding:0;justify-content:flex-start}.login-brand{display:flex;align-items:center;gap:12px;margin-bottom:8px}.login-logo{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 7px 12px rgba(16,42,67,.16))}.login-brand strong{font-size:18px}.login-brand small{display:block;color:#738094;margin-top:2px}
