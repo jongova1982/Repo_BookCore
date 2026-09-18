@@ -54,7 +54,7 @@
 		.link-button { border: 0; color: var(--green-dark); background: transparent; font-weight: 700; font-size: 12px; }
 		table { border-collapse: collapse; width: 100%; text-align: left; } th, td { padding: 15px 22px; border-bottom: 1px solid #edf1ee; font-size: 13px; } th { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; } tr:last-child td { border-bottom: 0; }
 		.book-name { font-weight: 700; } .author { color: var(--muted); font-size: 12px; margin-top: 3px; }
-		.status { display: inline-flex; padding: 5px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; } .status.available { background: #e8f3e9; color: #36734d; } .status.low { background: #fff0dc; color: #a66224; }
+		.status { display: inline-flex; padding: 5px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; } .status.available { background: #e8f3e9; color: #36734d; } .status.low, .status.pending { background: #fff0dc; color: #a66224; } .status.review { background: #e9f0f7; color: #4b7194; }
 		.activity { padding: 4px 22px 10px; } .activity-item { display: flex; gap: 13px; padding: 15px 0; border-bottom: 1px solid #edf1ee; } .activity-item:last-child { border: 0; }
 		.activity-icon { width: 31px; height: 31px; flex: 0 0 31px; display: grid; place-items: center; border-radius: 8px; font-size: 14px; } .activity-icon.green { background: #e4f0ea; color: var(--green-dark); } .activity-icon.amber { background: #fff0dc; color: #a66224; } .activity-icon.blue { background: #e9f0f7; color: var(--blue); }
 		.activity-tools { margin-left: auto; display: flex; gap: 4px; align-self: center; }
@@ -66,7 +66,7 @@
 		.empty { color: var(--muted); text-align: center; padding: 30px; font-size: 13px; }
 		.row-actions { display: flex; gap: 6px; white-space: nowrap; }
 		.row-actions button { border: 0; border-radius: 5px; padding: 7px 9px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
-		.edit-button { color: #47718e; background: #e8f0f6; } .delete-button { color: #a84e47; background: #fae9e5; }
+		.edit-button { color: #47718e; background: #e8f0f6; } .review-button { color: #8a5b21; background: #fff0dc; } .apply-button { color: #286251; background: #e4f0ea; } .delete-button { color: #a84e47; background: #fae9e5; }
 		@media (max-width: 850px) { .app { grid-template-columns: 1fr; } .sidebar { padding: 16px 20px; flex-direction: row; align-items: center; gap: 18px; } .eyebrow, .sidebar-footer { display:none; } .nav { display:flex; margin-left:auto; } .nav button { padding: 9px; } .nav button span:last-child { display:none; } .main { padding: 24px 20px 40px; } .topbar { margin-bottom: 30px; } .metrics { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
 		@media (max-width: 560px) { .hero, .section-header { align-items:start; flex-direction:column; } .metrics { gap: 10px; } .metric { padding: 15px; } .metric-value { font-size: 25px; } .panel { overflow-x:auto; } table { min-width: 540px; } .form-grid { grid-template-columns: 1fr 1fr; } .profile span { display:none; } }
 	</style>
@@ -93,7 +93,7 @@
 			</section>
 			<section class="section" id="users"><div class="section-header"><div><h1>Usuarios</h1><p class="hero-copy">Mantén organizada tu comunidad de lectores.</p></div><button class="primary" data-form="user-form">+ Añadir usuario</button></div><div class="panel form-panel" id="user-form"><h2>Registrar usuario</h2><form class="form-grid" data-type="user"><label>Nombre completo<input name="name" required placeholder="Ej. Ana Torres"></label><label>Cédula<input name="id" required placeholder="Número de cédula"></label><label>Teléfono<input name="phone" required placeholder="+57 300 000 0000"></label><div class="form-actions"><button type="button" class="secondary" data-close>Cancelar</button><button class="primary">Guardar usuario</button></div></form></div><div class="panel"><table><thead><tr><th>Nombre</th><th>Cédula</th><th>Teléfono</th><th>Estado</th></tr></thead><tbody id="users-list"><tr><td class="book-name">Maria Santos</td><td>10458921</td><td>+57 300 555 0142</td><td><span class="status available">Activo</span></td></tr><tr><td class="book-name">Daniel Ruiz</td><td>10873204</td><td>+57 300 555 0187</td><td><span class="status available">Activo</span></td></tr></tbody></table></div></section>
 			<section class="section" id="books"><div class="section-header"><div><h1>Libros</h1><p class="hero-copy">Toda tu colección, organizada y bajo control.</p></div><button class="primary" data-form="book-form">+ Añadir libro</button></div><div class="panel form-panel" id="book-form"><h2>Registrar libro</h2><form class="form-grid" data-type="book"><label>Código del libro<input name="code" required placeholder="BK-000"></label><label>Título<input name="title" required placeholder="Título del libro"></label><label>Autor<input name="author" required placeholder="Nombre del autor"></label><label>Unidades<input name="units" type="number" min="1" required placeholder="0"></label><div class="form-actions"><button type="button" class="secondary" data-close>Cancelar</button><button class="primary">Guardar libro</button></div></form></div><div class="panel"><table><thead><tr><th>Código</th><th>Título</th><th>Autor</th><th>Unidades</th></tr></thead><tbody id="books-list"><tr><td>BK-104</td><td class="book-name">The Midnight Library</td><td>Matt Haig</td><td>8</td></tr><tr><td>BK-208</td><td class="book-name">Atomic Habits</td><td>James Clear</td><td>2</td></tr><tr><td>BK-311</td><td class="book-name">The Creative Act</td><td>Rick Rubin</td><td>5</td></tr></tbody></table></div></section>
-			<section class="section" id="loans"><div class="section-header"><div><h1>Préstamos</h1><p class="hero-copy">Una vista clara de cada libro en circulación.</p></div><button class="primary" data-form="loan-form">+ Nuevo préstamo</button></div><div class="panel form-panel" id="loan-form"><h2>Crear préstamo</h2><form class="form-grid" data-type="loan"><label>Usuario<select name="user" required><option value="">Selecciona un usuario</option><option>Maria Santos</option><option>Daniel Ruiz</option></select></label><label>Libro<select name="book" required><option value="">Selecciona un libro</option><option>The Midnight Library</option><option>Atomic Habits</option><option>The Creative Act</option></select></label><label>Fecha de devolución<input name="due" type="date" required></label><div class="form-actions"><button type="button" class="secondary" data-close>Cancelar</button><button class="primary">Crear préstamo</button></div></form></div><div class="panel"><table><thead><tr><th>Libro</th><th>Usuario</th><th>Fecha de devolución</th><th>Estado</th></tr></thead><tbody id="loans-list"><tr><td class="book-name">The Alchemist</td><td>Maria Santos</td><td>24 sep. 2026</td><td><span class="status available">A tiempo</span></td></tr><tr><td class="book-name">Atomic Habits</td><td>Daniel Ruiz</td><td>19 sep. 2026</td><td><span class="status low">Vence pronto</span></td></tr></tbody></table></div></section>
+			<section class="section" id="loans"><div class="section-header"><div><h1>Préstamos</h1><p class="hero-copy">El usuario solicita un libro, se revisa la solicitud y luego se aplica el préstamo.</p></div><button class="primary" data-form="loan-form">+ Solicitar libro</button></div><div class="panel form-panel" id="loan-form"><h2>Solicitar préstamo</h2><form class="form-grid" data-type="loan"><label>Usuario<select name="user" required><option value="">Selecciona un usuario</option><option>Maria Santos</option><option>Daniel Ruiz</option></select></label><label>Libro<select name="book" required><option value="">Selecciona un libro</option><option>The Midnight Library</option><option>Atomic Habits</option><option>The Creative Act</option></select></label><label>Fecha de devolución<input name="due" type="date" required></label><div class="form-actions"><button type="button" class="secondary" data-close>Cancelar</button><button class="primary">Enviar solicitud</button></div></form></div><div class="panel"><table><thead><tr><th>Libro solicitado</th><th>Usuario</th><th>Fecha de devolución</th><th>Estado de solicitud</th></tr></thead><tbody id="loans-list"><tr data-status="applied"><td class="book-name">The Alchemist</td><td>Maria Santos</td><td>24 sep. 2026</td><td><span class="status available">Aplicado</span></td></tr><tr data-status="review"><td class="book-name">Atomic Habits</td><td>Daniel Ruiz</td><td>19 sep. 2026</td><td><span class="status review">En revisión</span></td></tr></tbody></table></div></section>
 		</main>
 	</div>
 	<script>
@@ -103,8 +103,8 @@
 		function showSection(name) { sections.forEach(section => section.classList.toggle('active', section.id === name)); navButtons.forEach(button => button.classList.toggle('active', button.dataset.section === name)); document.getElementById('current-page').textContent = pageNames[name]; }
 		navButtons.forEach(button => button.addEventListener('click', () => showSection(button.dataset.section)));
 		document.querySelectorAll('[data-section-link]').forEach(button => button.addEventListener('click', () => showSection(button.dataset.sectionLink)));
-		document.querySelectorAll('[data-form]').forEach(button => button.addEventListener('click', () => { editingRow = null; const panel = document.getElementById(button.dataset.form); const form = panel.querySelector('form'); form.reset(); panel.querySelector('h2').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Registrar libro' : 'Registrar usuario'; form.querySelector('.primary').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Guardar libro' : 'Guardar usuario'; panel.classList.add('open'); }));
-		document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => { editingRow = null; const panel = button.closest('.form-panel'); const form = panel.querySelector('form'); form.reset(); panel.querySelector('h2').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Registrar libro' : 'Registrar usuario'; form.querySelector('.primary').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Guardar libro' : 'Guardar usuario'; panel.classList.remove('open'); }));
+		document.querySelectorAll('[data-form]').forEach(button => button.addEventListener('click', () => { editingRow = null; const panel = document.getElementById(button.dataset.form); const form = panel.querySelector('form'); form.reset(); panel.querySelector('h2').textContent = form.dataset.type === 'loan' ? 'Solicitar préstamo' : form.dataset.type === 'book' ? 'Registrar libro' : 'Registrar usuario'; form.querySelector('.primary').textContent = form.dataset.type === 'loan' ? 'Enviar solicitud' : form.dataset.type === 'book' ? 'Guardar libro' : 'Guardar usuario'; panel.classList.add('open'); }));
+		document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => { editingRow = null; const panel = button.closest('.form-panel'); const form = panel.querySelector('form'); form.reset(); panel.querySelector('h2').textContent = form.dataset.type === 'loan' ? 'Solicitar préstamo' : form.dataset.type === 'book' ? 'Registrar libro' : 'Registrar usuario'; form.querySelector('.primary').textContent = form.dataset.type === 'loan' ? 'Enviar solicitud' : form.dataset.type === 'book' ? 'Guardar libro' : 'Guardar usuario'; panel.classList.remove('open'); }));
 		const crudConfig = {
 			user: { form: 'user-form', list: 'users-list', fields: ['name', 'id', 'phone'], count: 'user-count' },
 			book: { form: 'book-form', list: 'books-list', fields: ['code', 'title', 'author', 'units'], count: 'book-count' },
@@ -122,13 +122,28 @@
 				if (row.querySelector('[data-edit]')) return;
 				row.dataset.type = type;
 				row.dataset.values = JSON.stringify(config.fields.map((field, index) => field === 'due' && type === 'loan' ? ({ 'The Alchemist': '2026-09-24', 'Atomic Habits': '2026-09-19' }[row.children[0].textContent.trim()] || '') : row.children[index].textContent.trim()));
-				row.insertAdjacentHTML('beforeend', `<td class="row-actions"><button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`);
+				if (type === 'loan' && !row.dataset.status) row.dataset.status = 'requested';
+				row.insertAdjacentHTML('beforeend', `<td class="row-actions">${type === 'loan' ? '<button class="review-button" data-review>Revisar</button><button class="apply-button" data-apply>Aplicar</button>' : ''}<button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`);
 			});
+		}
+		function setLoanStatus(row, status) {
+			const statusCell = row.children[3];
+			const statusData = {
+				requested: { className: 'status pending', text: 'Solicitado' },
+				review: { className: 'status review', text: 'En revisión' },
+				applied: { className: 'status available', text: 'Aplicado' }
+			}[status];
+			row.dataset.status = status;
+			statusCell.innerHTML = `<span class="${statusData.className}">${statusData.text}</span>`;
 		}
 		Object.keys(crudConfig).forEach(addRowActions);
 		document.addEventListener('click', event => {
 			const editButton = event.target.closest('[data-edit]');
 			const deleteButton = event.target.closest('[data-delete]');
+			const reviewButton = event.target.closest('[data-review]');
+			const applyButton = event.target.closest('[data-apply]');
+			if (reviewButton) setLoanStatus(reviewButton.closest('tr'), 'review');
+			if (applyButton) setLoanStatus(applyButton.closest('tr'), 'applied');
 			if (deleteButton) {
 				const row = deleteButton.closest('tr');
 				if (!confirm('¿Eliminar este registro?')) return;
@@ -172,7 +187,8 @@
 				const row = document.createElement('tr');
 				row.dataset.type = type;
 				row.dataset.values = JSON.stringify(values);
-				row.innerHTML = displayValues.map((value, index) => `<td class="${index === (type === 'user' ? 0 : type === 'book' ? 1 : 0) ? 'book-name' : ''}">${escapeHTML(value)}</td>`).join('') + (type === 'user' ? '<td><span class="status available">Activo</span></td>' : type === 'loan' ? '<td><span class="status available">A tiempo</span></td>' : '') + `<td class="row-actions"><button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`;
+				row.innerHTML = displayValues.map((value, index) => `<td class="${index === (type === 'user' ? 0 : type === 'book' ? 1 : 0) ? 'book-name' : ''}">${escapeHTML(value)}</td>`).join('') + (type === 'user' ? '<td><span class="status available">Activo</span></td>' : type === 'loan' ? '<td><span class="status pending">Solicitado</span></td>' : '') + `<td class="row-actions">${type === 'loan' ? '<button class="review-button" data-review>Revisar</button><button class="apply-button" data-apply>Aplicar</button>' : ''}<button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`;
+				if (type === 'loan') row.dataset.status = 'requested';
 				document.getElementById(config.list).prepend(row);
 				const counter = document.getElementById(config.count);
 				counter.textContent = (Number(counter.textContent.replace(',', '')) + 1).toLocaleString('es-CO');
@@ -180,8 +196,8 @@
 			editingRow = null;
 			form.reset();
 			form.closest('.form-panel').classList.remove('open');
-			form.closest('.form-panel').querySelector('h2').textContent = type === 'loan' ? 'Crear préstamo' : type === 'book' ? 'Registrar libro' : 'Registrar usuario';
-			form.querySelector('.primary').textContent = type === 'loan' ? 'Crear préstamo' : type === 'book' ? 'Guardar libro' : 'Guardar usuario';
+			form.closest('.form-panel').querySelector('h2').textContent = type === 'loan' ? 'Solicitar préstamo' : type === 'book' ? 'Registrar libro' : 'Registrar usuario';
+			form.querySelector('.primary').textContent = type === 'loan' ? 'Enviar solicitud' : type === 'book' ? 'Guardar libro' : 'Guardar usuario';
 		}, true);
 		document.addEventListener('click', event => {
 			const metricEdit = event.target.closest('[data-metric-edit]');
@@ -218,6 +234,12 @@
 	</script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 
