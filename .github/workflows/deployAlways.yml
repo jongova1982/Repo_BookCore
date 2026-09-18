@@ -1,4 +1,4 @@
-name: 🚀 Tarea de Despliegue
+name: 🚀 Biblioteca
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: 🎉 Trabajo de Despliegue
+    name: 🎉 Biblioteca
     runs-on: ubuntu-latest
 
     steps:
