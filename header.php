@@ -8,24 +8,21 @@ $current = basename($_SERVER['PHP_SELF']);
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= e($page_title ?? 'Biblioteca Pro') ?></title>
+  <title><?= e($page_title ?? 'BookCoreMGM') ?></title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app-shell">
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-mark">B</div>
-      <div><strong>Biblioteca Pro</strong><small>Gestión en la nube</small></div>
+      <img class="brand-logo" src="bookcore_logo.png" alt="BookCoreMGM - Núcleo de Gestión">
+      <div><strong>BookCoreMGM</strong><small>Núcleo de Gestión</small></div>
     </div>
     <nav>
       <a class="<?= $current === 'index.php' ? 'active' : '' ?>" href="index.php">📊 Dashboard</a>
       <a class="<?= $current === 'usuarios.php' ? 'active' : '' ?>" href="usuarios.php">👥 Usuarios</a>
       <a class="<?= $current === 'libros.php' ? 'active' : '' ?>" href="libros.php">📚 Libros</a>
       <a class="<?= $current === 'prestamos.php' ? 'active' : '' ?>" href="prestamos.php">🔄 Préstamos</a>
-      <a href="exportar.php?tipo=usuarios">⬇️ Exportar usuarios</a>
-      <a href="exportar.php?tipo=libros">⬇️ Exportar libros</a>
-      <a href="exportar.php?tipo=prestamos">⬇️ Exportar préstamos</a>
     </nav>
     <div class="sidebar-footer">
       <div class="admin-chip"><span class="dot"></span><?= e(current_admin()['nombre'] ?? 'Administrador') ?></div>

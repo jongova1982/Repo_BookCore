@@ -18,7 +18,7 @@ include __DIR__ . '/header.php';
 <section class="hero">
   <div class="hero-content">
     <span class="hero-kicker">📚 Sistema bibliotecario</span>
-    <h2>Bienvenido al Sistema Bibliotecario</h2>
+    <h2>Bienvenido a BookCoreMGM</h2>
     <p>Gestiona usuarios, libros y préstamos de manera fácil, organizada y segura desde un solo lugar.</p>
     <div class="hero-quote">“La lectura es el viaje de los que no pueden tomar el tren.”</div>
     <div class="hero-actions">

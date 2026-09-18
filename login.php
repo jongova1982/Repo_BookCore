@@ -27,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#102a43"><title>Acceso · Biblioteca Pro</title><link rel="stylesheet" href="style.css"></head>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#102a43"><title>Acceso · BookCoreMGM</title><link rel="stylesheet" href="style.css"></head>
 <body class="login-page">
   <div class="login-shell">
     <section class="login-visual">
       <div>
-        <span class="login-badge">📚 BookCoreMGM</span>
+        <span class="login-badge">📚 BookCoreMGM · Núcleo de Gestión</span>
         <h2>Sistema de Gestión Bibliotecaria</h2>
         <p>Un espacio moderno para administrar usuarios, libros, préstamos y devoluciones de tu biblioteca.</p>
       </div>
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </section>
     <section class="login-panel">
       <div class="login-card">
-        <div class="login-brand"><div class="brand-mark">📖</div><div><strong>BookCoreMGM</strong><small>Gestión de Biblioteca</small></div></div>
+        <div class="login-brand"><img src="bookcore_logo.png" alt="BookCoreMGM" class="login-logo"><div><strong>BookCoreMGM</strong><small>Núcleo de Gestión</small></div></div>
         <h1>Bienvenido</h1><p class="muted">Ingresa al panel administrativo.</p>
         <?php if ($error): ?><div class="alert error"><?= e($error) ?></div><?php endif; ?>
         <form method="post" autocomplete="off">
