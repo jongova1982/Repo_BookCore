@@ -13,21 +13,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
   redirect('libros.php');
  }catch(Throwable $e){flash('error',$e->getCode()===23000?'El código del libro ya está registrado.':$e->getMessage());redirect('libros.php');}
 }
-$q=trim($_GET['q']??'');
-
-$s=$pdo->prepare("SELECT * FROM libros
-    WHERE codigo LIKE :q1
-    OR titulo LIKE :q2
-    OR autor LIKE :q3
-    ORDER BY titulo");
-
-$s->execute([
-    'q1' => '%'.$q.'%',
-    'q2' => '%'.$q.'%',
-    'q3' => '%'.$q.'%'
-]);
-
-$books=$s->fetchAll();
+$q=trim($_GET['q']??''); $s=$pdo->prepare("SELECT * FROM libros WHERE codigo LIKE :q OR titulo LIKE :q OR autor LIKE :q ORDER BY titulo");$s->execute(['q'=>'%'.$q.'%']);$books=$s->fetchAll();
 $edit=null;if(isset($_GET['editar'])){$s=$pdo->prepare('SELECT * FROM libros WHERE id=?');$s->execute([(int)$_GET['editar']]);$edit=$s->fetch();}
 include __DIR__.'/header.php';
 ?>

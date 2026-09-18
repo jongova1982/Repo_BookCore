@@ -17,18 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } catch (Throwable $e) { flash('error', $e->getCode()===23000 ? 'La cédula ya está registrada.' : $e->getMessage()); redirect('usuarios.php'); }
 }
 $q=trim($_GET['q']??'');
-$stmt=$pdo->prepare("SELECT * FROM usuarios
-    WHERE nombre LIKE :q1
-    OR cedula LIKE :q2
-    OR telefono LIKE :q3
-    ORDER BY nombre");
-
-$stmt->execute([
-    'q1' => '%'.$q.'%',
-    'q2' => '%'.$q.'%',
-    'q3' => '%'.$q.'%'
-]);
- $users=$stmt->fetchAll();
+$stmt=$pdo->prepare("SELECT * FROM usuarios WHERE nombre LIKE :q OR cedula LIKE :q OR telefono LIKE :q ORDER BY nombre"); $stmt->execute(['q'=>'%'.$q.'%']); $users=$stmt->fetchAll();
 $edit=null; if (isset($_GET['editar'])) { $s=$pdo->prepare('SELECT * FROM usuarios WHERE id=?'); $s->execute([(int)$_GET['editar']]); $edit=$s->fetch(); }
 include __DIR__ . '/header.php';
 ?>

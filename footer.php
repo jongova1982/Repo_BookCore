@@ -1,3 +1,4 @@
+  <div class="footer-line"><span><strong>Biblioteca Pro</strong> &nbsp;|&nbsp; Sistema de Gestión Bibliotecaria</span><span>© 2026 Todos los derechos reservados.</span></div>
   </main>
 </div>
 <script>

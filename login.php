@@ -25,18 +25,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = 'Correo o contraseña incorrectos.';
 }
 ?>
+
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Acceso · Biblioteca Pro</title><link rel="stylesheet" href="style.css"></head>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#102a43"><title>Acceso · Biblioteca Pro</title><link rel="stylesheet" href="style.css"></head>
 <body class="login-page">
-<div class="login-card">
-  <div class="brand centered"><div class="brand-mark">B</div><div><strong>Biblioteca Pro</strong><small>Gestión en la nube</small></div></div>
-  <h1>Bienvenido</h1><p class="muted">Ingresa al panel administrativo.</p>
-  <?php if ($error): ?><div class="alert error"><?= e($error) ?></div><?php endif; ?>
-  <form method="post" autocomplete="off">
-    <label>Correo<input type="email" name="email" required value="<?= e($_POST['email'] ?? '') ?>"></label>
-    <label>Contraseña<input type="password" name="password" required></label>
-    <button class="btn primary full" type="submit">Ingresar</button>
-  </form>
-  <p class="login-note">Acceso inicial: admin@biblioteca.local / Admin123*</p>
-</div>
+  <div class="login-shell">
+    <section class="login-visual">
+      <div>
+        <span class="login-badge">📚 Biblioteca Pro</span>
+        <h2>Sistema de Gestión Bibliotecaria</h2>
+        <p>Un espacio moderno para administrar usuarios, libros, préstamos y devoluciones de tu biblioteca.</p>
+      </div>
+      <div class="login-quote">“Los libros son puertas a mundos nuevos.”</div>
+    </section>
+    <section class="login-panel">
+      <div class="login-card">
+        <div class="login-brand"><div class="brand-mark">📖</div><div><strong>Biblioteca Pro</strong><small>Gestión de Biblioteca</small></div></div>
+        <h1>Bienvenido</h1><p class="muted">Ingresa al panel administrativo.</p>
+        <?php if ($error): ?><div class="alert error"><?= e($error) ?></div><?php endif; ?>
+        <form method="post" autocomplete="off">
+          <label>Correo<input type="email" name="email" required value="<?= e($_POST['email'] ?? '') ?>"></label>
+          <label>Contraseña<input type="password" name="password" required></label>
+          <button class="btn primary full" type="submit">Ingresar al sistema</button>
+        </form>
+        <p class="login-note">Acceso inicial: admin@biblioteca.local / Admin123*</p>
+      </div>
+    </section>
+  </div>
 </body></html>
