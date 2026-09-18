@@ -1,28 +1,33 @@
-name: 🚀 Biblioteca
+name: Biblioteca
 
 on:
   push:
     branches:
+      - main
+      - Vinasco
+      - "*"
 
 jobs:
   deploy:
-    name: 🎉 Biblioteca
+    name: Biblioteca
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🚚 Obteniendo el código más reciente
+      - name: Obteniendo el código más reciente
         uses: actions/checkout@v4
 
-      - name: 📂 Sincronizando archivos via FTP
+      - name: Sincronizando archivos vía FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ftp-vinasco.alwaysdata.net # Change if using another host
+          server: ftp-vinasco.alwaysdata.net
           username: vinasco
           password: clase12345
-          server-dir: www/ # Replace with your correct path
-          protocol: ftps
-          timeout: 86400000
+          server-dir: www/
+          protocol: ftp
+          port: 21
+          timeout: 600000
           log-level: standard
           exclude: |
-            .git/**
-            .github/**
+            **/.git*
+            **/.git*/**
+            **/.github/**
