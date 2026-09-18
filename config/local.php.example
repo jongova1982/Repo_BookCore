@@ -1,0 +1,10 @@
+<?php
+declare(strict_types=1);
+
+return [
+    'host' => 'mysql-jongox.alwaysdata.net',
+    'name' => 'jongox_bookcore_db',
+    'user' => 'jongox',
+    'password' => 'REEMPLAZAR_CON_LA_CLAVE_REAL',
+];
+

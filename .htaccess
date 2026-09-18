@@ -1,0 +1,12 @@
+DirectoryIndex index.php
+Options -Indexes
+
+RedirectMatch 403 ^/storage(?:/|$)
+
+<FilesMatch "(^\.|\.(sql|env|ini|log)$)">
+    Require all denied
+</FilesMatch>
+
+<Files "local.php">
+    Require all denied
+</Files>

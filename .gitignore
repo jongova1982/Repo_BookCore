@@ -1,0 +1,5 @@
+config/local.php
+.env
+.ftp-deploy-sync-state.json
+storage/sessions/*
+!storage/sessions/.gitkeep
