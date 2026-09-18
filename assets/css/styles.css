@@ -71,8 +71,8 @@ button { color: inherit; }
     transition: transform .3s ease;
 }
 
-.brand { display: flex; justify-content: center; height: 86px; margin-bottom: 24px; }
-.brand img { width: 126px; height: 96px; object-fit: contain; filter: drop-shadow(0 0 14px rgba(0, 153, 255, .28)); }
+.brand { display: flex; align-items: center; justify-content: center; height: 86px; margin-bottom: 24px; overflow: hidden; }
+.brand img { width: 110px !important; height: 84px !important; max-width: 110px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0, 153, 255, .25)); }
 
 .navigation { display: grid; gap: 8px; }
 .nav-item {
@@ -134,7 +134,8 @@ button { color: inherit; }
 .hero-card h2 { margin: 15px 0 12px; font: 700 clamp(31px, 4vw, 52px)/1.02 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
 .hero-card h2 em { color: #0879d9; font-style: normal; text-shadow: none; }
 .hero-card p { max-width: 550px; margin: 0 0 22px; color: var(--ink-muted); font-size: 13px; line-height: 1.65; }
-.hero-logo { position: absolute; right: 5%; width: min(25vw, 260px); max-height: 238px; object-fit: contain; opacity: .68; filter: drop-shadow(0 9px 24px rgba(0, 82, 160, .2)); }
+.hero-visual { position: absolute; inset: 0 3% 0 auto; width: min(31%, 330px); display: grid; place-items: center; pointer-events: none; }
+.hero-logo { position: static; width: 190px !important; height: 190px !important; max-width: 100%; max-height: 190px; object-fit: contain; opacity: .68; filter: drop-shadow(0 9px 24px rgba(0, 82, 160, .2)); }
 
 .primary-button, .text-button, .action-button { border: 0; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
 .primary-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 43px; padding: 0 18px; border-radius: 12px; background: linear-gradient(135deg, #008cff, #0759d7); color: white; font-weight: 700; font-size: 12px; box-shadow: 0 12px 24px rgba(0, 109, 255, .22); }
@@ -208,7 +209,8 @@ tbody tr:hover { background: rgba(18, 129, 235, .07); }
 
 @media (max-width: 1050px) {
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .hero-logo { opacity: .38; width: 230px; right: 2%; }
+    .hero-visual { right: 2%; width: 230px; }
+    .hero-logo { width: 170px !important; height: 170px !important; opacity: .38; }
 }
 
 @media (max-width: 760px) {
@@ -221,7 +223,8 @@ tbody tr:hover { background: rgba(18, 129, 235, .07); }
     .admin-chip div { display: none; }
     .view { padding-top: 20px; }
     .hero-card { min-height: 350px; padding: 34px 24px; }
-    .hero-logo { width: 205px; right: -45px; bottom: -12px; opacity: .2; }
+    .hero-visual { inset: auto -30px -5px auto; width: 185px; height: 185px; }
+    .hero-logo { width: 155px !important; height: 155px !important; opacity: .2; }
     .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     .stat-card { min-height: 96px; padding: 15px; }
     .stat-icon { flex-basis: 39px; height: 39px; }

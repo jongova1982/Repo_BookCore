@@ -15,14 +15,14 @@ if (empty($_SESSION['csrf_token'])) {
     <meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
     <title>BookCore | Nucleo de gestion bibliotecaria</title>
     <link rel="icon" href="assets/img/bookcore_sinfondo.png" type="image/png">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css?v=20260917-2">
 </head>
 <body>
     <div class="background-overlay" aria-hidden="true"></div>
 
     <aside class="sidebar" id="sidebar">
         <a class="brand" href="#inicio" aria-label="BookCore, ir al inicio">
-            <img src="assets/img/bookcore_sinfondo.png" alt="Logo BookCore">
+            <img src="assets/img/bookcore_sinfondo.png" alt="Logo BookCore" width="110" height="84" style="width:110px;height:84px;object-fit:contain;display:block;margin:auto;">
         </a>
         <nav class="navigation" aria-label="Navegacion principal">
             <button class="nav-item active" type="button" data-view="inicio">
@@ -62,7 +62,9 @@ if (empty($_SESSION['csrf_token'])) {
                     <p>Administra tu catalogo, tus lectores y cada prestamo desde un unico nucleo digital.</p>
                     <button class="primary-button" type="button" data-go="prestamos">Registrar prestamo <span>→</span></button>
                 </div>
-                <img src="assets/img/bookcore_sinfondo.png" alt="Emblema BookCore" class="hero-logo">
+                <div class="hero-visual" aria-hidden="true">
+                    <img src="assets/img/bookcore_sinfondo.png" alt="" class="hero-logo" width="190" height="190" style="width:190px;height:190px;max-width:100%;object-fit:contain;display:block;margin:auto;">
+                </div>
             </div>
 
             <div class="stats-grid">
@@ -129,6 +131,5 @@ if (empty($_SESSION['csrf_token'])) {
     <script src="assets/js/app.js" defer></script>
 </body>
 </html>
-
 
 
