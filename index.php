@@ -8,19 +8,21 @@ $currentPage = 'dashboard';
 // Estadísticas
 $totalLibros = $pdo->query("SELECT COUNT(*) FROM libros")->fetchColumn();
 $totalUsuarios = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
-$totalPrestamosActivos = $pdo->query("SELECT COUNT(*) FROM prestamos WHERE estado = 'activo'")->fetchColumn();
+$totalPrestamosActivos = $pdo->query("SELECT COUNT(*) FROM prestamos WHERE estado = 'ACTIVO'")->fetchColumn();
 $totalUnidades = $pdo->query("SELECT COALESCE(SUM(unidades), 0) FROM libros")->fetchColumn();
 
 // Libros recientes
 $librosRecientes = $pdo->query("SELECT * FROM libros ORDER BY id DESC LIMIT 3")->fetchAll();
 
-// Préstamos recientes
+// Préstamos recientes (adaptado a tu estructura con prestamo_detalle)
 $prestamosRecientes = $pdo->query("
     SELECT p.*, u.nombre as usuario_nombre, l.titulo as libro_titulo 
     FROM prestamos p
     JOIN usuarios u ON p.usuario_id = u.id
-    JOIN libros l ON p.libro_id = l.id
-    ORDER BY p.id DESC LIMIT 3
+    JOIN prestamo_detalle pd ON pd.prestamo_id = p.id
+    JOIN libros l ON pd.libro_id = l.id
+    ORDER BY p.id DESC 
+    LIMIT 5
 ")->fetchAll();
 
 require_once 'includes/header.php';
@@ -117,8 +119,8 @@ require_once 'includes/header.php';
             <div class="flex-1 min-w-0">
               <p class="font-medium text-sm truncate"><?= htmlspecialchars($p['usuario_nombre']) ?> → <?= htmlspecialchars($p['libro_titulo']) ?></p>
               <p class="text-xs text-slate-500">
-                <?= date('d M Y', strtotime($p['fecha'])) ?> · 
-                <span class="<?= $p['estado'] === 'activo' ? 'text-emerald-600' : 'text-slate-400' ?>"><?= $p['estado'] ?></span>
+                <?= date('d M Y', strtotime($p['fecha_prestamo'])) ?> · 
+                <span class="<?= $p['estado'] === 'ACTIVO' ? 'text-emerald-600' : 'text-slate-400' ?>"><?= $p['estado'] ?></span>
               </p>
             </div>
           </div>

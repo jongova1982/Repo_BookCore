@@ -11,14 +11,15 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
+    // Nuevo préstamo
     if ($action === 'guardar') {
         $usuario_id = (int)($_POST['usuario_id'] ?? 0);
         $libro_id = (int)($_POST['libro_id'] ?? 0);
+        $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? date('Y-m-d', strtotime('+15 days'));
 
         if ($usuario_id && $libro_id) {
             try {
-                // Verificar unidades
-                $stmt = $pdo->prepare("SELECT unidades FROM libros WHERE id=?");
+                $stmt = $pdo->prepare("SELECT unidades FROM libros WHERE id = ? AND activo = 1");
                 $stmt->execute([$libro_id]);
                 $libro = $stmt->fetch();
 
@@ -27,12 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $pdo->beginTransaction();
 
-                    // Crear préstamo
-                    $stmt = $pdo->prepare("INSERT INTO prestamos (usuario_id, libro_id, fecha, estado) VALUES (?, ?, CURDATE(), 'activo')");
-                    $stmt->execute([$usuario_id, $libro_id]);
+                    $stmt = $pdo->prepare("INSERT INTO prestamos (usuario_id, fecha_prestamo, fecha_vencimiento, estado) VALUES (?, CURDATE(), ?, 'ACTIVO')");
+                    $stmt->execute([$usuario_id, $fecha_vencimiento]);
+                    $prestamo_id = $pdo->lastInsertId();
 
-                    // Restar unidad
-                    $stmt = $pdo->prepare("UPDATE libros SET unidades = unidades - 1 WHERE id=?");
+                    $stmt = $pdo->prepare("INSERT INTO prestamo_detalle (prestamo_id, libro_id, cantidad) VALUES (?, ?, 1)");
+                    $stmt->execute([$prestamo_id, $libro_id]);
+
+                    $stmt = $pdo->prepare("UPDATE libros SET unidades = unidades - 1 WHERE id = ?");
                     $stmt->execute([$libro_id]);
 
                     $pdo->commit();
@@ -47,21 +50,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Devolver préstamo
     if ($action === 'devolver') {
         $id = (int)($_POST['id'] ?? 0);
         try {
             $pdo->beginTransaction();
 
-            $stmt = $pdo->prepare("SELECT libro_id, estado FROM prestamos WHERE id=?");
+            $stmt = $pdo->prepare("SELECT estado FROM prestamos WHERE id = ?");
             $stmt->execute([$id]);
             $prestamo = $stmt->fetch();
 
-            if ($prestamo && $prestamo['estado'] === 'activo') {
-                $stmt = $pdo->prepare("UPDATE prestamos SET estado='devuelto' WHERE id=?");
+            if ($prestamo && $prestamo['estado'] === 'ACTIVO') {
+                $stmt = $pdo->prepare("UPDATE prestamos SET estado = 'DEVUELTO', fecha_devolucion = CURDATE() WHERE id = ?");
                 $stmt->execute([$id]);
 
-                $stmt = $pdo->prepare("UPDATE libros SET unidades = unidades + 1 WHERE id=?");
-                $stmt->execute([$prestamo['libro_id']]);
+                $stmt = $pdo->prepare("SELECT libro_id, cantidad FROM prestamo_detalle WHERE prestamo_id = ?");
+                $stmt->execute([$id]);
+                $detalles = $stmt->fetchAll();
+
+                foreach ($detalles as $d) {
+                    $stmt = $pdo->prepare("UPDATE libros SET unidades = unidades + ? WHERE id = ?");
+                    $stmt->execute([$d['cantidad'], $d['libro_id']]);
+                }
 
                 $pdo->commit();
                 $mensaje = 'Préstamo marcado como devuelto';
@@ -70,14 +80,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } catch (PDOException $e) {
             if ($pdo->inTransaction()) $pdo->rollBack();
-            $error = 'Error al devolver';
+            $error = 'Error al devolver: ' . $e->getMessage();
         }
     }
 
+    // Eliminar
     if ($action === 'eliminar') {
         $id = (int)($_POST['id'] ?? 0);
         try {
-            $stmt = $pdo->prepare("DELETE FROM prestamos WHERE id=?");
+            $stmt = $pdo->prepare("DELETE FROM prestamo_detalle WHERE prestamo_id = ?");
+            $stmt->execute([$id]);
+            $stmt = $pdo->prepare("DELETE FROM prestamos WHERE id = ?");
             $stmt->execute([$id]);
             $mensaje = 'Registro eliminado';
         } catch (PDOException $e) {
@@ -86,31 +99,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Listado
 $search = $_GET['q'] ?? '';
 if ($search) {
     $stmt = $pdo->prepare("
-        SELECT p.*, u.nombre as usuario_nombre, l.titulo as libro_titulo 
+        SELECT p.*, u.nombre as usuario_nombre, 
+               GROUP_CONCAT(l.titulo SEPARATOR ', ') as libros
         FROM prestamos p
         JOIN usuarios u ON p.usuario_id = u.id
-        JOIN libros l ON p.libro_id = l.id
+        LEFT JOIN prestamo_detalle pd ON pd.prestamo_id = p.id
+        LEFT JOIN libros l ON pd.libro_id = l.id
         WHERE u.nombre LIKE ? OR l.titulo LIKE ?
+        GROUP BY p.id
         ORDER BY p.id DESC
     ");
     $stmt->execute(["%$search%", "%$search%"]);
 } else {
     $stmt = $pdo->query("
-        SELECT p.*, u.nombre as usuario_nombre, l.titulo as libro_titulo 
+        SELECT p.*, u.nombre as usuario_nombre, 
+               GROUP_CONCAT(l.titulo SEPARATOR ', ') as libros
         FROM prestamos p
         JOIN usuarios u ON p.usuario_id = u.id
-        JOIN libros l ON p.libro_id = l.id
+        LEFT JOIN prestamo_detalle pd ON pd.prestamo_id = p.id
+        LEFT JOIN libros l ON pd.libro_id = l.id
+        GROUP BY p.id
         ORDER BY p.id DESC
     ");
 }
 $prestamos = $stmt->fetchAll();
 
-// Para el modal
-$usuarios = $pdo->query("SELECT id, nombre, cedula FROM usuarios ORDER BY nombre")->fetchAll();
-$librosDisponibles = $pdo->query("SELECT id, codigo, titulo, unidades FROM libros WHERE unidades > 0 ORDER BY titulo")->fetchAll();
+$usuarios = $pdo->query("SELECT id, nombre, cedula FROM usuarios WHERE activo = 1 ORDER BY nombre")->fetchAll();
+$librosDisponibles = $pdo->query("SELECT id, codigo, titulo, unidades FROM libros WHERE unidades > 0 AND activo = 1 ORDER BY titulo")->fetchAll();
 
 $mostrarModal = isset($_GET['action']) && $_GET['action'] === 'nuevo';
 
@@ -144,8 +163,9 @@ require_once 'includes/header.php';
     <thead class="bg-slate-50 border-b border-slate-100">
       <tr>
         <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Usuario</th>
-        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Libro</th>
-        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Fecha</th>
+        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Libro(s)</th>
+        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Fecha Préstamo</th>
+        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Vencimiento</th>
         <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</th>
         <th class="text-right px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Acciones</th>
       </tr>
@@ -153,7 +173,7 @@ require_once 'includes/header.php';
     <tbody class="divide-y divide-slate-100">
       <?php if (empty($prestamos)): ?>
         <tr>
-          <td colspan="5" class="px-6 py-12 text-center text-slate-400">
+          <td colspan="6" class="px-6 py-12 text-center text-slate-400">
             <i class="fas fa-handshake text-4xl mb-3 block"></i>
             No hay préstamos registrados
           </td>
@@ -162,15 +182,22 @@ require_once 'includes/header.php';
         <?php foreach ($prestamos as $p): ?>
           <tr class="hover:bg-slate-50">
             <td class="px-6 py-4 font-medium"><?= htmlspecialchars($p['usuario_nombre']) ?></td>
-            <td class="px-6 py-4 text-slate-600"><?= htmlspecialchars($p['libro_titulo']) ?></td>
-            <td class="px-6 py-4 text-slate-600"><?= date('d M Y', strtotime($p['fecha'])) ?></td>
+            <td class="px-6 py-4 text-slate-600"><?= htmlspecialchars($p['libros'] ?? '—') ?></td>
+            <td class="px-6 py-4 text-slate-600"><?= date('d M Y', strtotime($p['fecha_prestamo'])) ?></td>
+            <td class="px-6 py-4 text-slate-600"><?= date('d M Y', strtotime($p['fecha_vencimiento'])) ?></td>
             <td class="px-6 py-4">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= $p['estado'] === 'activo' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600' ?>">
-                <?= $p['estado'] === 'activo' ? 'Activo' : 'Devuelto' ?>
+              <?php
+                $color = 'bg-slate-100 text-slate-600';
+                if ($p['estado'] === 'ACTIVO') $color = 'bg-emerald-100 text-emerald-700';
+                if ($p['estado'] === 'DEVUELTO') $color = 'bg-slate-100 text-slate-600';
+                if ($p['estado'] === 'VENCIDO') $color = 'bg-red-100 text-red-700';
+              ?>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= $color ?>">
+                <?= $p['estado'] ?>
               </span>
             </td>
             <td class="px-6 py-4 text-right">
-              <?php if ($p['estado'] === 'activo'): ?>
+              <?php if ($p['estado'] === 'ACTIVO'): ?>
                 <form method="POST" class="inline" onsubmit="return confirm('¿Marcar como devuelto?')">
                   <input type="hidden" name="action" value="devolver">
                   <input type="hidden" name="id" value="<?= $p['id'] ?>">
@@ -220,6 +247,11 @@ require_once 'includes/header.php';
             <option value="<?= $l['id'] ?>"><?= htmlspecialchars($l['titulo']) ?> (<?= htmlspecialchars($l['codigo']) ?>) - <?= $l['unidades'] ?> disp.</option>
           <?php endforeach; ?>
         </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de vencimiento</label>
+        <input type="date" name="fecha_vencimiento" value="<?= date('Y-m-d', strtotime('+15 days')) ?>" required
+               class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary/50">
       </div>
       <div class="flex gap-3 pt-2">
         <a href="prestamos.php" class="flex-1 px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 text-center transition-all">Cancelar</a>
