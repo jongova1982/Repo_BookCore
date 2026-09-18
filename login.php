@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Acceso · Biblioteca Pro</title><link rel="stylesheet" href="assets/style.css"></head>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Acceso · Biblioteca Pro</title><link rel="stylesheet" href="style.css"></head>
 <body class="login-page">
 <div class="login-card">
   <div class="brand centered"><div class="brand-mark">B</div><div><strong>Biblioteca Pro</strong><small>Gestión en la nube</small></div></div>

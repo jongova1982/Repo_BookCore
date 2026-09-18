@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 }
 $q=trim($_GET['q']??''); $s=$pdo->prepare("SELECT * FROM libros WHERE codigo LIKE :q OR titulo LIKE :q OR autor LIKE :q ORDER BY titulo");$s->execute(['q'=>'%'.$q.'%']);$books=$s->fetchAll();
 $edit=null;if(isset($_GET['editar'])){$s=$pdo->prepare('SELECT * FROM libros WHERE id=?');$s->execute([(int)$_GET['editar']]);$edit=$s->fetch();}
-include __DIR__.'/partials/header.php';
+include __DIR__.'/header.php';
 ?>
 <div class="grid-2">
 <section class="card"><div class="card-head"><div><h2><?= $edit?'Editar libro':'Nuevo libro' ?></h2><p>Inventario de ejemplares</p></div></div>
@@ -24,4 +24,4 @@ include __DIR__.'/partials/header.php';
 <div class="actions"><button class="btn primary" type="submit">Guardar libro</button><?php if($edit): ?><a class="btn" href="libros.php">Cancelar</a><?php endif; ?></div></form></section>
 <section class="card"><div class="card-head"><div><h2>Catálogo</h2><p><?= count($books) ?> registro(s)</p></div><form class="search" method="get"><input name="q" placeholder="Código, título o autor..." value="<?= e($q) ?>"><button class="btn" type="submit">Buscar</button></form></div>
 <div class="table-wrap"><table><thead><tr><th>Código</th><th>Título</th><th>Autor</th><th>Unidades</th><th>Estado</th><th></th></tr></thead><tbody><?php foreach($books as $b): ?><tr><td><strong><?= e($b['codigo']) ?></strong></td><td><?= e($b['titulo']) ?></td><td><?= e($b['autor']) ?></td><td><span class="stock <?= $b['unidades']>0?'ok':'zero' ?>"><?= (int)$b['unidades'] ?></span></td><td><span class="badge <?= $b['activo']?'activo':'inactivo' ?>"><?= $b['activo']?'ACTIVO':'INACTIVO' ?></span></td><td class="row-actions"><a class="icon-btn" href="libros.php?editar=<?= $b['id'] ?>">Editar</a><form method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="toggle"><input type="hidden" name="id" value="<?= $b['id'] ?>"><button class="icon-btn" type="submit"><?= $b['activo']?'Desactivar':'Activar' ?></button></form></td></tr><?php endforeach; ?><?php if(!$books): ?><tr><td colspan="6" class="empty">No se encontraron libros.</td></tr><?php endif; ?></tbody></table></div></section></div>
-<?php include __DIR__.'/partials/footer.php'; ?>
+<?php include __DIR__.'/footer.php'; ?>

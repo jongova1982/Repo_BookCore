@@ -30,7 +30,7 @@ $users=$pdo->query("SELECT id,nombre,cedula FROM usuarios WHERE activo=1 ORDER B
 $books=$pdo->query("SELECT id,codigo,titulo,unidades FROM libros WHERE activo=1 AND unidades>0 ORDER BY titulo")->fetchAll();
 $status=$_GET['estado']??'TODOS';$allowed=['TODOS','ACTIVO','VENCIDO','DEVUELTO'];if(!in_array($status,$allowed,true))$status='TODOS';
 $sql="SELECT p.*,u.nombre usuario, GROUP_CONCAT(CONCAT(l.titulo,' x',d.cantidad) ORDER BY l.titulo SEPARATOR ', ') libros FROM prestamos p JOIN usuarios u ON u.id=p.usuario_id JOIN prestamo_detalle d ON d.prestamo_id=p.id JOIN libros l ON l.id=d.libro_id ";$params=[];if($status!=='TODOS'){$sql.=' WHERE p.estado=? ';$params[]=$status;}$sql.=' GROUP BY p.id ORDER BY p.id DESC LIMIT 100';$s=$pdo->prepare($sql);$s->execute($params);$loans=$s->fetchAll();
-include __DIR__.'/partials/header.php';
+include __DIR__.'/header.php';
 ?>
 <section class="card"><div class="card-head"><div><h2>Registrar préstamo</h2><p>Puedes agregar varios libros al mismo préstamo.</p></div></div>
 <form method="post" class="loan-form" id="loanForm"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="create">
@@ -45,4 +45,4 @@ const items=document.getElementById('items');
 document.getElementById('addItem').addEventListener('click',()=>{const source=items.querySelector('.loan-item');const clone=source.cloneNode(true);clone.querySelector('select').value='';clone.querySelector('input').value=1;items.appendChild(clone);});
 items.addEventListener('click',e=>{if(e.target.classList.contains('remove-item') && items.querySelectorAll('.loan-item').length>1)e.target.closest('.loan-item').remove();});
 </script>
-<?php include __DIR__.'/partials/footer.php'; ?>
+<?php include __DIR__.'/footer.php'; ?>
