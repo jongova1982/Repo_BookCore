@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="login-shell">
     <section class="login-visual">
       <div>
-        <span class="login-badge">📚 Biblioteca Pro</span>
+        <span class="login-badge">📚 BookCoreMGM</span>
         <h2>Sistema de Gestión Bibliotecaria</h2>
         <p>Un espacio moderno para administrar usuarios, libros, préstamos y devoluciones de tu biblioteca.</p>
       </div>
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </section>
     <section class="login-panel">
       <div class="login-card">
-        <div class="login-brand"><div class="brand-mark">📖</div><div><strong>Biblioteca Pro</strong><small>Gestión de Biblioteca</small></div></div>
+        <div class="login-brand"><div class="brand-mark">📖</div><div><strong>BookCoreMGM</strong><small>Gestión de Biblioteca</small></div></div>
         <h1>Bienvenido</h1><p class="muted">Ingresa al panel administrativo.</p>
         <?php if ($error): ?><div class="alert error"><?= e($error) ?></div><?php endif; ?>
         <form method="post" autocomplete="off">
