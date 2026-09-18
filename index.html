@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -103,24 +103,17 @@
 		function showSection(name) { sections.forEach(section => section.classList.toggle('active', section.id === name)); navButtons.forEach(button => button.classList.toggle('active', button.dataset.section === name)); document.getElementById('current-page').textContent = pageNames[name]; }
 		navButtons.forEach(button => button.addEventListener('click', () => showSection(button.dataset.section)));
 		document.querySelectorAll('[data-section-link]').forEach(button => button.addEventListener('click', () => showSection(button.dataset.sectionLink)));
-		document.querySelectorAll('[data-form]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.form).classList.add('open')));
-		document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('.form-panel').classList.remove('open')));
-		document.querySelectorAll('form').forEach(form => form.addEventListener('submit', event => {
-			event.preventDefault(); const data = Object.fromEntries(new FormData(form)); const type = form.dataset.type; const target = document.getElementById(type === 'user' ? 'users-list' : type === 'book' ? 'books-list' : 'loans-list'); const row = document.createElement('tr');
-			  if (type === 'user') row.innerHTML = `<td class="book-name">${data.name}</td><td>${data.id}</td><td>${data.phone}</td><td><span class="status available">Activo</span></td>`;
-			if (type === 'book') row.innerHTML = `<td>${data.code}</td><td class="book-name">${data.title}</td><td>${data.author}</td><td>${data.units}</td>`;
-			  if (type === 'loan') row.innerHTML = `<td class="book-name">${data.book}</td><td>${data.user}</td><td>${new Date(data.due + 'T00:00:00').toLocaleDateString('es-CO', { month: 'short', day: 'numeric', year: 'numeric' })}</td><td><span class="status available">A tiempo</span></td>`;
-			target.prepend(row); form.reset(); form.closest('.form-panel').classList.remove('open');
-			if (type === 'user') document.getElementById('user-count').textContent = Number(document.getElementById('user-count').textContent.replace(',', '')) + 1;
-			if (type === 'book') document.getElementById('book-count').textContent = Number(document.getElementById('book-count').textContent.replace(',', '')) + 1;
-			if (type === 'loan') document.getElementById('loan-count').textContent = Number(document.getElementById('loan-count').textContent) + 1;
-		}));
+		document.querySelectorAll('[data-form]').forEach(button => button.addEventListener('click', () => { editingRow = null; const panel = document.getElementById(button.dataset.form); const form = panel.querySelector('form'); form.reset(); panel.querySelector('h2').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Registrar libro' : 'Registrar usuario'; form.querySelector('.primary').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Guardar libro' : 'Guardar usuario'; panel.classList.add('open'); }));
+		document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => { editingRow = null; const panel = button.closest('.form-panel'); const form = panel.querySelector('form'); form.reset(); panel.querySelector('h2').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Registrar libro' : 'Registrar usuario'; form.querySelector('.primary').textContent = form.dataset.type === 'loan' ? 'Crear prestamo' : form.dataset.type === 'book' ? 'Guardar libro' : 'Guardar usuario'; panel.classList.remove('open'); }));
 		const crudConfig = {
 			user: { form: 'user-form', list: 'users-list', fields: ['name', 'id', 'phone'], count: 'user-count' },
 			book: { form: 'book-form', list: 'books-list', fields: ['code', 'title', 'author', 'units'], count: 'book-count' },
 			loan: { form: 'loan-form', list: 'loans-list', fields: ['book', 'user', 'due'], count: 'loan-count' }
 		};
 		let editingRow = null;
+		function escapeHTML(value) {
+			return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character]));
+		}
 		function addRowActions(type) {
 			const config = crudConfig[type];
 			const table = document.getElementById(config.list).closest('table');
@@ -141,6 +134,7 @@
 				if (!confirm('¿Eliminar este registro?')) return;
 				const config = crudConfig[row.dataset.type];
 				row.remove();
+				if (editingRow === row) editingRow = null;
 				const counter = document.getElementById(config.count);
 				counter.textContent = Math.max(0, Number(counter.textContent.replace(',', '')) - 1).toLocaleString('es-CO');
 			}
@@ -149,7 +143,12 @@
 				const config = crudConfig[editButton.dataset.edit];
 				const form = document.querySelector(`#${config.form} form`);
 				const values = JSON.parse(row.dataset.values);
-				config.fields.forEach((field, index) => { if (form.elements[field]) form.elements[field].value = values[index] || ''; });
+				config.fields.forEach((field, index) => {
+					const input = form.elements[field];
+					if (!input) return;
+					if (input.tagName === 'SELECT' && values[index] && !Array.from(input.options).some(option => option.value === values[index] || option.textContent === values[index])) input.add(new Option(values[index], values[index]));
+					input.value = values[index] || '';
+				});
 				editingRow = row;
 				document.querySelector(`#${config.form} h2`).textContent = 'Editar registro';
 				form.querySelector('.primary').textContent = 'Actualizar';
@@ -173,7 +172,7 @@
 				const row = document.createElement('tr');
 				row.dataset.type = type;
 				row.dataset.values = JSON.stringify(values);
-				row.innerHTML = displayValues.map((value, index) => `<td class="${index === (type === 'user' ? 0 : type === 'book' ? 1 : 0) ? 'book-name' : ''}">${value}</td>`).join('') + (type === 'user' ? '<td><span class="status available">Activo</span></td>' : type === 'loan' ? '<td><span class="status available">A tiempo</span></td>' : '') + `<td class="row-actions"><button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`;
+				row.innerHTML = displayValues.map((value, index) => `<td class="${index === (type === 'user' ? 0 : type === 'book' ? 1 : 0) ? 'book-name' : ''}">${escapeHTML(value)}</td>`).join('') + (type === 'user' ? '<td><span class="status available">Activo</span></td>' : type === 'loan' ? '<td><span class="status available">A tiempo</span></td>' : '') + `<td class="row-actions"><button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`;
 				document.getElementById(config.list).prepend(row);
 				const counter = document.getElementById(config.count);
 				counter.textContent = (Number(counter.textContent.replace(',', '')) + 1).toLocaleString('es-CO');
@@ -219,6 +218,10 @@
 	</script>
 </body>
 </html>
+
+
+
+
 
 
 
