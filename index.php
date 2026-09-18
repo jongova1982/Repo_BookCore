@@ -128,8 +128,7 @@ if (empty($_SESSION['csrf_token'])) {
     </div>
 
     <div class="toast-container" id="toastContainer" aria-live="polite"></div>
-    <script src="assets/js/app.js" defer></script>
+    <script src="assets/js/app.js?v=20260917-2" defer></script>
 </body>
 </html>
-
 
