@@ -63,6 +63,9 @@
 		.row-actions { display: flex; gap: 6px; white-space: nowrap; }
 		.row-actions button { border: 0; border-radius: 5px; padding: 7px 9px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
 		.edit-button { color: #47718e; background: #e8f0f6; } .delete-button { color: #a84e47; background: #fae9e5; }
+		.metric-actions, .activity-actions { display: flex; gap: 5px; margin-top: 10px; }
+		.metric-actions button, .activity-actions button { border: 0; border-radius: 5px; padding: 5px 7px; color: #47718e; background: #e8f0f6; font-size: 9px; font-weight: 700; text-transform: uppercase; }
+		.metric-actions button:last-child, .activity-actions button:last-child { color: #a84e47; background: #fae9e5; }
 		@media (max-width: 850px) { .app { grid-template-columns: 1fr; } .sidebar { padding: 16px 20px; flex-direction: row; align-items: center; gap: 18px; } .eyebrow, .sidebar-footer { display:none; } .nav { display:flex; margin-left:auto; } .nav button { padding: 9px; } .nav button span:last-child { display:none; } .main { padding: 24px 20px 40px; } .topbar { margin-bottom: 30px; } .metrics { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
 		@media (max-width: 560px) { .hero, .section-header { align-items:start; flex-direction:column; } .metrics { gap: 10px; } .metric { padding: 15px; } .metric-value { font-size: 25px; } .panel { overflow-x:auto; } table { min-width: 540px; } .form-grid { grid-template-columns: 1fr 1fr; } .profile span { display:none; } }
 	</style>
@@ -84,8 +87,8 @@
 			<div class="topbar"><div class="crumb">Biblioteca / <strong id="current-page">Resumen</strong></div><div class="profile"><span>Administrador JALOJI</span><span class="avatar">J</span></div></div>
 			<section class="section active" id="dashboard">
 				<div class="hero"><div><h1>Gestión de biblioteca.</h1><p class="hero-copy">Todo lo que tu biblioteca necesita, en un espacio de trabajo.</p></div><div class="date">Jueves, 17 de septiembre de 2026</div></div>
-				<div class="metrics"><div class="metric"><div class="metric-label">Usuarios activos</div><div class="metric-value" id="user-count">128</div></div><div class="metric"><div class="metric-label">Libros en catálogo</div><div class="metric-value" id="book-count">2,486</div></div><div class="metric"><div class="metric-label">Préstamos de hoy</div><div class="metric-value" id="loan-count">64</div></div><div class="metric"><div class="metric-label">Préstamos vencidos</div><div class="metric-value">07</div></div></div>
-				<div class="content-grid"><div class="panel"><div class="panel-head"><div><h2>Actividad reciente</h2><p class="panel-sub">Últimos cambios en BookCore</p></div></div><div class="activity"><div class="activity-item"><div class="activity-icon green">↗</div><div><div class="activity-title">Préstamo creado · The Alchemist</div><div class="activity-time">Hoy, 09:42 · Maria Santos</div></div></div><div class="activity-item"><div class="activity-icon amber">+</div><div><div class="activity-title">Nuevo libro añadido al catálogo</div><div class="activity-time">Ayer · The Creative Act</div></div></div><div class="activity-item"><div class="activity-icon blue">♙</div><div><div class="activity-title">Nuevo usuario registrado</div><div class="activity-time">Ayer · Daniel Ruiz</div></div></div></div></div></div>
+				<div class="metrics"><div class="metric" data-metric="user-count"><div class="metric-label">Usuarios activos</div><div class="metric-value" id="user-count">128</div><div class="metric-actions"><button data-metric-edit>Editar</button><button data-metric-delete>Eliminar</button></div></div><div class="metric" data-metric="book-count"><div class="metric-label">Libros en catálogo</div><div class="metric-value" id="book-count">2,486</div><div class="metric-actions"><button data-metric-edit>Editar</button><button data-metric-delete>Eliminar</button></div></div><div class="metric" data-metric="loan-count"><div class="metric-label">Préstamos de hoy</div><div class="metric-value" id="loan-count">64</div><div class="metric-actions"><button data-metric-edit>Editar</button><button data-metric-delete>Eliminar</button></div></div><div class="metric" data-metric="overdue-count"><div class="metric-label">Préstamos vencidos</div><div class="metric-value">07</div><div class="metric-actions"><button data-metric-edit>Editar</button><button data-metric-delete>Eliminar</button></div></div></div>
+				<div class="content-grid"><div class="panel"><div class="panel-head"><div><h2>Actividad reciente</h2><p class="panel-sub">Últimos cambios en BookCore</p></div><button class="primary" data-activity-add>+ Añadir actividad</button></div><div class="activity" id="activity-list"><div class="activity-item"><div class="activity-icon green">↗</div><div><div class="activity-title">Préstamo creado · The Alchemist</div><div class="activity-time">Hoy, 09:42 · Maria Santos</div><div class="activity-actions"><button data-activity-edit>Editar</button><button data-activity-delete>Eliminar</button></div></div></div><div class="activity-item"><div class="activity-icon amber">+</div><div><div class="activity-title">Nuevo libro añadido al catálogo</div><div class="activity-time">Ayer · The Creative Act</div><div class="activity-actions"><button data-activity-edit>Editar</button><button data-activity-delete>Eliminar</button></div></div></div><div class="activity-item"><div class="activity-icon blue">♙</div><div><div class="activity-title">Nuevo usuario registrado</div><div class="activity-time">Ayer · Daniel Ruiz</div><div class="activity-actions"><button data-activity-edit>Editar</button><button data-activity-delete>Eliminar</button></div></div></div></div></div></div>
 			</section>
 			<section class="section" id="users"><div class="section-header"><div><h1>Usuarios</h1><p class="hero-copy">Mantén organizada tu comunidad de lectores.</p></div><button class="primary" data-form="user-form">+ Añadir usuario</button></div><div class="panel form-panel" id="user-form"><h2>Registrar usuario</h2><form class="form-grid" data-type="user"><label>Nombre completo<input name="name" required placeholder="Ej. Ana Torres"></label><label>Cédula<input name="id" required placeholder="Número de cédula"></label><label>Teléfono<input name="phone" required placeholder="+57 300 000 0000"></label><div class="form-actions"><button type="button" class="secondary" data-close>Cancelar</button><button class="primary">Guardar usuario</button></div></form></div><div class="panel"><table><thead><tr><th>Nombre</th><th>Cédula</th><th>Teléfono</th><th>Estado</th></tr></thead><tbody id="users-list"><tr><td class="book-name">Maria Santos</td><td>10458921</td><td>+57 300 555 0142</td><td><span class="status available">Activo</span></td></tr><tr><td class="book-name">Daniel Ruiz</td><td>10873204</td><td>+57 300 555 0187</td><td><span class="status available">Activo</span></td></tr></tbody></table></div></section>
 			<section class="section" id="books"><div class="section-header"><div><h1>Libros</h1><p class="hero-copy">Toda tu colección, organizada y bajo control.</p></div><button class="primary" data-form="book-form">+ Añadir libro</button></div><div class="panel form-panel" id="book-form"><h2>Registrar libro</h2><form class="form-grid" data-type="book"><label>Código del libro<input name="code" required placeholder="BK-000"></label><label>Título<input name="title" required placeholder="Título del libro"></label><label>Autor<input name="author" required placeholder="Nombre del autor"></label><label>Unidades<input name="units" type="number" min="1" required placeholder="0"></label><div class="form-actions"><button type="button" class="secondary" data-close>Cancelar</button><button class="primary">Guardar libro</button></div></form></div><div class="panel"><table><thead><tr><th>Código</th><th>Título</th><th>Autor</th><th>Unidades</th></tr></thead><tbody id="books-list"><tr><td>BK-104</td><td class="book-name">The Midnight Library</td><td>Matt Haig</td><td>8</td></tr><tr><td>BK-208</td><td class="book-name">Atomic Habits</td><td>James Clear</td><td>2</td></tr><tr><td>BK-311</td><td class="book-name">The Creative Act</td><td>Rick Rubin</td><td>5</td></tr></tbody></table></div></section>
@@ -138,7 +141,7 @@
 				const config = crudConfig[row.dataset.type];
 				row.remove();
 				const counter = document.getElementById(config.count);
-				counter.textContent = Math.max(0, Number(counter.textContent.replace(',', '')) - 1).toLocaleString('es-CO');
+				if (counter) counter.textContent = Math.max(0, Number(counter.textContent.replace(',', '')) - 1).toLocaleString('es-CO');
 			}
 			if (editButton) {
 				const row = editButton.closest('tr');
@@ -152,6 +155,35 @@
 				document.getElementById(config.form).classList.add('open');
 			}
 		});
+			document.querySelectorAll('[data-metric-edit]').forEach(button => button.addEventListener('click', () => {
+				const card = button.closest('.metric');
+				const value = prompt('Escribe el nuevo valor:', card.querySelector('.metric-value').textContent);
+				if (value !== null && value.trim() !== '' && /^\d[\d,.]*$/.test(value.trim())) card.querySelector('.metric-value').textContent = value.trim();
+			}));
+			document.querySelectorAll('[data-metric-delete]').forEach(button => button.addEventListener('click', () => {
+				if (confirm('¿Eliminar este indicador?')) button.closest('.metric').remove();
+			}));
+			document.querySelector('[data-activity-add]').addEventListener('click', () => {
+				const title = prompt('Título de la actividad:');
+				if (!title || !title.trim()) return;
+				const time = prompt('Fecha o detalle de la actividad:', 'Hoy');
+				const item = document.createElement('div');
+				item.className = 'activity-item';
+				item.innerHTML = `<div class="activity-icon blue">+</div><div><div class="activity-title">${title.trim()}</div><div class="activity-time">${(time || 'Hoy').trim()}</div><div class="activity-actions"><button data-activity-edit>Editar</button><button data-activity-delete>Eliminar</button></div></div>`;
+				document.getElementById('activity-list').prepend(item);
+			});
+			document.addEventListener('click', event => {
+				const activityEdit = event.target.closest('[data-activity-edit]');
+				const activityDelete = event.target.closest('[data-activity-delete]');
+				if (activityDelete) { if (confirm('¿Eliminar esta actividad?')) activityDelete.closest('.activity-item').remove(); }
+				if (activityEdit) {
+					const item = activityEdit.closest('.activity-item');
+					const title = prompt('Editar título:', item.querySelector('.activity-title').textContent);
+					const time = prompt('Editar fecha o detalle:', item.querySelector('.activity-time').textContent);
+					if (title && title.trim()) item.querySelector('.activity-title').textContent = title.trim();
+					if (time && time.trim()) item.querySelector('.activity-time').textContent = time.trim();
+				}
+			});
 		document.addEventListener('submit', event => {
 			if (!event.target.matches('form[data-type]')) return;
 			event.preventDefault();
@@ -172,7 +204,7 @@
 				row.innerHTML = displayValues.map((value, index) => `<td class="${index === (type === 'user' ? 0 : type === 'book' ? 1 : 0) ? 'book-name' : ''}">${value}</td>`).join('') + (type === 'user' ? '<td><span class="status available">Activo</span></td>' : type === 'loan' ? '<td><span class="status available">A tiempo</span></td>' : '') + `<td class="row-actions"><button class="edit-button" data-edit="${type}">Editar</button><button class="delete-button" data-delete>Eliminar</button></td>`;
 				document.getElementById(config.list).prepend(row);
 				const counter = document.getElementById(config.count);
-				counter.textContent = (Number(counter.textContent.replace(',', '')) + 1).toLocaleString('es-CO');
+				if (counter) counter.textContent = (Number(counter.textContent.replace(',', '')) + 1).toLocaleString('es-CO');
 			}
 			editingRow = null;
 			form.reset();
